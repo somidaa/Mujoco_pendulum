@@ -1,0 +1,39 @@
+<mujoco model="simple_pendulum">
+  <!--
+    Project 1 - MuJoCo Pendulum Dynamics & Control Lab
+    ---------------------------------------------------
+    A single hinge pendulum driven by one rotary motor.
+
+    * pivot (hinge joint) at world position (0, 0, 1.5)
+    * rod  : capsule, length 1.0 m, mass 0.3 kg
+    * bob  : sphere,  radius 0.12 m, mass 0.7 kg
+    * q = 0     -> hanging down (stable equilibrium)
+    * u = ctrl[0] -> torque applied about the hinge axis (N*m)
+
+    The "energy" flag lets MuJoCo compute potential and kinetic
+    energy internally (mjData.energy = [potential, kinetic]).
+  -->
+
+  <option
+      timestep="0.002"
+      integrator="RK4"
+      gravity="0 0 -9.81">
+    <flag energy="enable"/>
+  </option>
+
+  <worldbody>
+    <light name="light0" pos="0 3 5" dir="0 -1 -1"/>
+    <geom name="ground" type="plane" size="3 3 0.1" rgba="0.55 0.55 0.6 1"/>
+    <geom name="pivot" type="sphere" size="0.05" pos="0 0 1.5" rgba="0.2 0.2 0.25 1"/>
+
+    <body name="pendulum" pos="0 0 1.5">
+      <joint name="hinge" type="hinge" axis="0 1 0"/>
+      <geom name="rod" type="capsule" fromto="0 0 0 0 0 -1" size="0.03" mass="0.3" rgba="0.35 0.6 0.9 1"/>
+      <geom name="bob" type="sphere" pos="0 0 -1" size="0.12" mass="0.7" rgba="0.9 0.35 0.35 1"/>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="pendulum_motor" joint="hinge" gear="1"/>
+  </actuator>
+</mujoco>

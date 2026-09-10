@@ -1,0 +1,7 @@
+# Project 1 - MuJoCo Pendulum Dynamics & Control Lab
+# install with:  pip install -r requirements.txt
+mujoco>=3.0
+numpy
+matplotlib
+imageio-ffmpeg>=0.5
+pytest>=8.0
