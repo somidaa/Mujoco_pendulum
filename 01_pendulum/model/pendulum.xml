@@ -23,12 +23,13 @@
                   type="hinge"
                   axis="0 1 0"/>
 
-            <!-- 摆杆 -->
+            <!-- 摆杆（显式质量 0.3 kg，默认密度下杆会重达 ~8 kg 导致 PD 增益失效） -->
             <geom
                 name="rod"
                 type="capsule"
                 fromto="0 0 0  0 0 -1"
-                size="0.05"/>
+                size="0.05"
+                mass="0.3"/>
 
         </body>
 

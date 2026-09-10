@@ -55,3 +55,30 @@ def _savefig(fig, save_path):
         if dir_name:
             os.makedirs(dir_name, exist_ok=True)
         fig.savefig(save_path, dpi=300, bbox_inches="tight")
+
+
+def plot_pd_comparison(series, gain_name, out_path):
+    # 多条 q(t) 叠加，比较不同增益
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for label, (t, q) in series.items():
+        ax.plot(t, q, label=f"{gain_name} = {label}")
+    ax.axhline(0, color="k", ls="--", lw=1)
+    ax.set_xlabel("time (s)")
+    ax.set_ylabel("q (rad)")
+    ax.set_title(f"PD control: {gain_name} sweep")
+    ax.legend()
+    ax.grid(True)
+    _savefig(fig, out_path)
+
+
+def plot_energy_drift(series, out_path):
+    # 不同 timestep 的 |E(t)-E(0)| 对比（对数坐标）
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for dt, (t, drift) in series.items():
+        ax.semilogy(t, drift, label=f"dt = {dt} s")
+    ax.set_xlabel("time (s)")
+    ax.set_ylabel("|E(t)-E(0)| (J)")
+    ax.set_title("Energy drift vs timestep")
+    ax.legend()
+    ax.grid(True)
+    _savefig(fig, out_path)
