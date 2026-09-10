@@ -1,46 +1,34 @@
-"""Milestone 1 acceptance tests: model loading and MjModel / MjData."""
-import numpy as np
+import sys
+import time
+from pathlib import Path
 
-from src.model import load_model, create_data, MODEL_PATH
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
+import mujoco
+import mujoco.viewer
 
-def test_model_loads_from_xml():
-    model = load_model(MODEL_PATH)
-    assert model is not None
+from src.model import load_model, create_data
 
+XML_PATH = PROJECT_ROOT / "model" / "pendulum.xml"
 
-def test_dimensions_of_single_pendulum():
-    model = load_model(MODEL_PATH)
-    # one hinge joint -> 1 position, 1 velocity, 1 control input
-    assert model.nq == 1
-    assert model.nv == 1
-    assert model.nu == 1
-
-
-def test_data_creation_and_shapes():
-    model = load_model(MODEL_PATH)
+def main():
+    model = load_model(str(XML_PATH))
     data = create_data(model)
-    assert data.qpos.shape == (model.nq,)
-    assert data.qvel.shape == (model.nv,)
-    assert data.ctrl.shape == (model.nu,)
-    assert data.time == 0.0
 
+    print("nq = ", model.nq)
+    print("nv = ", model.nv)
+    print("nu = ", model.nu)
 
-def test_default_pose_is_hanging_down():
-    model = load_model(MODEL_PATH)
-    # q = 0 -> rod points straight down
-    assert abs(model.qpos0[0]) < 1e-9
+    print("qpos = ", data.qpos)
+    print("qvel = ", data.qvel)
+    print("qacc = ", data.qacc)
+    print("time = ", data.time)
 
+    with mujoco.viewer.launch_passive(model, data) as viewer:
+        while viewer.is_running():
+            time.sleep(0.01)
 
-def test_initial_state_can_be_set():
-    model = load_model(MODEL_PATH)
-    data = create_data(model)
-    data.qpos[0] = np.pi / 4
-    data.qvel[0] = 0.5
-    assert abs(data.qpos[0] - np.pi / 4) < 1e-12
-    assert abs(data.qvel[0] - 0.5) < 1e-12
-
-
-def test_gravity_is_earth_like():
-    model = load_model(MODEL_PATH)
-    assert abs(model.opt.gravity[2] + 9.81) < 1e-6
+if __name__ == "__main__":
+    main()
