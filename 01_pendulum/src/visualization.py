@@ -82,3 +82,16 @@ def plot_energy_drift(series, out_path):
     ax.legend()
     ax.grid(True)
     _savefig(fig, out_path)
+
+
+def plot_free_dynamics_comparison(series, out_path):
+    # 不同初始角度的 q(t) 对比
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for label, (t, q) in series.items():
+        ax.plot(t, q, label=f"q0 = {label}")
+    ax.set_xlabel("time (s)")
+    ax.set_ylabel("q (rad)")
+    ax.set_title("Free dynamics: initial angle comparison")
+    ax.legend()
+    ax.grid(True)
+    _savefig(fig, out_path)

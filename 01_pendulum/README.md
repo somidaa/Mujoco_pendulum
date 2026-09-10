@@ -20,7 +20,8 @@
 │   ├── 02_constant_torque.py # 恒力矩
 │   ├── 03_pd_control.py      # PD 控制（viewer 实时显示）
 │   ├── 04_energy_analysis.py # 能量分析（4.1 能量记录 + 4.2 timestep 漂移）
-│   └── 05_parameter_sweep.py # Kp×Kd 16 组合扫描 + 指标表 + 对比图
+│   ├── 05_parameter_sweep.py # Kp×Kd 16 组合扫描 + 指标表 + 对比图
+│   └── 06_period_vs_angle.py # 15/30/45/60° 初始角周期对比
 ├── tests/                  # 模型 / 仿真 / 控制器验证
 ├── outputs/                # csv / plots
 └── requirements.txt
@@ -35,6 +36,7 @@ py experiments/02_constant_torque.py  # 恒力矩
 py experiments/03_pd_control.py       # PD 控制
 py experiments/04_energy_analysis.py  # 能量分析 + timestep 漂移
 py experiments/05_parameter_sweep.py  # Kp×Kd 参数扫描
+py experiments/06_period_vs_angle.py  # 初始角周期对比
 py -m pytest tests
 ```
 
@@ -62,3 +64,5 @@ py -m pytest tests
   - Kd 太小 → 欠阻尼振荡、难收敛（超调 ~90%）
   - Kd 合适 → 快且稳（如 Kp=20/Kd=2：0.44 s 收敛，超调 5.8%）
   - Kd 太大 → 过阻尼变慢（Kp=1/Kd=2：3.38 s）
+- **06 初始角周期对比**：15/30/45/60° 自由摆动，输出 4 个 CSV + 对比图
+  - 周期随摆角增大而变长（1.675 s → 1.790 s），非线性摆特性
